@@ -39,14 +39,14 @@ sample_editor::sample_editor(TFruityPlug* effect, void* ptr)
 		knob->setInsetValue(7.0f);
 		knob->setMax((1 << 16));
 		
-		// Set default values
+		// Set default values to match sample.cpp defaults
 		if (i == 0 || i == 3) // Gain and Sustain default to full
 			knob->setDefaultValue((1 << 16));
-		else if (i == 1) // Attack - 10ms
+		else if (i == 1) // Attack - 10ms (0.01 * 2.0 = 0.02 range)
 			knob->setDefaultValue((int)(0.005f * (1 << 16)));
-		else if (i == 2) // Decay - 100ms
+		else if (i == 2) // Decay - 100ms (0.1 * 2.0 = 0.2 range)
 			knob->setDefaultValue((int)(0.05f * (1 << 16)));
-		else if (i == 4) // Release - 200ms
+		else if (i == 4) // Release - 200ms (0.2 * 4.0 = 0.8 range)
 			knob->setDefaultValue((int)(0.05f * (1 << 16)));
 		
 		this->_controls[i] = knob;

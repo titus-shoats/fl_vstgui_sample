@@ -3,6 +3,15 @@
 #include <cmath>
 
 //---------------------
+// Constants
+//---------------------
+namespace {
+	constexpr float PITCH_SCALE = 100.0f;     // FL Studio pitch scaling factor
+	constexpr float MIDDLE_C = 60.0f;         // MIDI note for middle C
+	constexpr float DEFAULT_SAMPLE_RATE = 44100.0f; // TODO: Query from host
+}
+
+//---------------------
 // Plug-in information
 //---------------------
 TFruityPlugInfo PlugInfo =
@@ -283,7 +292,7 @@ TVoiceHandle _stdcall sample::TriggerVoice(PVoiceParams VoiceParams, intptr_t Se
 	voice->released = false;
 	
 	// Get MIDI note from voice params
-	voice->note = (int)(VoiceParams->InitLevels.Pitch / 100.0f + 60.0f); // Convert pitch to MIDI note
+	voice->note = (int)(VoiceParams->InitLevels.Pitch / PITCH_SCALE + MIDDLE_C);
 	
 	// Get velocity (0-127 from FL Studio, convert to 0.0-1.0)
 	int velocityValue = _host->Voice_GetEventValue(HostTag, SetTag, 0, FPV_GetVelocity);
@@ -291,7 +300,7 @@ TVoiceHandle _stdcall sample::TriggerVoice(PVoiceParams VoiceParams, intptr_t Se
 	
 	// Calculate phase increment for pitch
 	float freq = noteToFrequency(voice->note);
-	float sampleRate = 44100.0f; // TODO: Get from host
+	float sampleRate = DEFAULT_SAMPLE_RATE; // TODO: Query from host using PlugHost API
 	voice->phaseIncrement = (freq * SAMPLE_LENGTH) / sampleRate;
 	
 	voice->phase = 0.0f;
@@ -463,7 +472,7 @@ float sample::calculateEnvelope(Voice* voice, int numSamples)
 {
 	if (!voice->active) return 0.0f;
 	
-	float sampleRate = 44100.0f; // TODO: Get actual sample rate from host
+	float sampleRate = DEFAULT_SAMPLE_RATE; // TODO: Query from host using PlugHost API
 	
 	if (voice->released)
 	{
