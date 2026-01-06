@@ -3,7 +3,7 @@
 #include "plugin-bindings/plugguieditor.h"
 #include "lib/platform/platformfactory.h"
 
-const int NumControls = 1;    // the amount of controls
+const int NumControls = 5;    // the amount of controls (Gain, Attack, Decay, Sustain, Release)
 
 class TFruityPlug;
 
